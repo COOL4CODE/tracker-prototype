@@ -5,6 +5,8 @@ const app     = express();
 const morgan  = require('morgan');
 var cors      = require('cors');
 var fs = require('fs');
+var md5 = require('md5');
+
 
 // Prevent Cors-domain errors and allow it
 app.use(cors());
@@ -18,11 +20,13 @@ app.get( "/", (req, res) => {
     {
         if(err){console.log(err);
         }else{
-              console.log('Datos');
-              res.end(data);
+              let rdata = JSON.parse(data.toString());
+              let result = {...rdata, hash: md5(data)};
+              res.end(JSON.stringify(result));
         }
     }
     );
+
 })
 
 app.get("/asset/:id", (req, res) => {
