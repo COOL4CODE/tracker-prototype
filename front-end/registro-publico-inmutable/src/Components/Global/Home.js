@@ -134,7 +134,7 @@ class Home extends Component{
     }
 
     _handleBuyAsset = () => {
-        console.log("foo");
+        //console.log("foo");
 		axios.post('http://localhost:3003/assets-transfer', {
 			hash: this.state.hash
 		}).then(res => {
@@ -370,6 +370,21 @@ class Home extends Component{
                                             </Grid>
                                            
                                             <Grid item xs={12} className="custom-text-parent-info" style={{ marginTop: '10px', textAlign: 'left' }}>
+                                                <Button variant="contained" 
+                                                        color="primary" 
+                                                        className={classes.button}
+                                                        onClick={this._handleBuyAsset}>
+                                                    Multas</Button> &nbsp;
+                                                <Button variant="contained" 
+                                                        color="primary" 
+                                                        className={classes.button}
+                                                        onClick={this._handleBuyAsset}>
+                                                    Tramites</Button> &nbsp;
+                                                <Button variant="contained" 
+                                                        color="primary" 
+                                                        className={classes.button}
+                                                        onClick={this._handleBuyAsset}>
+                                                    Seguimiento</Button> &nbsp;
                                                 <Button variant="contained" 
                                                         color="secondary" 
                                                         className={classes.button}
