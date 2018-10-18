@@ -35,6 +35,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 // Assets
 import sim_img from './resources/images/cory-checketts-533117-unsplash.jpg';
@@ -71,7 +72,10 @@ class Home extends Component{
             image: '',
             tickets: [],
             logs: [],
-            request: []
+            request: [],
+            showAlertMsg: false,  
+            alertMsg: "", 
+            transactionHash: ""
         }
     }
 
@@ -128,6 +132,18 @@ class Home extends Component{
             console.log(e.target.value);
         }
     }
+
+    _handleBuyAsset = () => {
+        console.log("foo");
+		axios.post('http://localhost:3003/assets-transfer', {
+			hash: this.state.hash
+		}).then(res => {
+			this.setState({ showAlertMsg: true, alertMsg: res.data.msg, transactionHash: res.data.data.transactionHash.data });			
+		});		
+	};
+	_handleClose = () => {
+		this.setState({ showAlertMsg: false, alertMsg: "" });
+	};
 
     render(){
 
@@ -283,7 +299,8 @@ class Home extends Component{
                   </div>
                 </div>
               </main>
-
+              
+              {/* Dialog for big UI*/}
               <Dialog
                     fullScreen
                     open={this.state.open}
@@ -324,8 +341,6 @@ class Home extends Component{
 
                         <Grid item xs={12}>
                             <Paper className={classes.paper} style={{ marginTop: '25px' }}>
-                            
-
                             <Grid container spacing={8}>
                                 <Grid container item xs={12} spacing={8}>
                                     <Grid item xs={12}>
@@ -355,7 +370,10 @@ class Home extends Component{
                                             </Grid>
                                            
                                             <Grid item xs={12} className="custom-text-parent-info" style={{ marginTop: '10px', textAlign: 'left' }}>
-                                                <Button variant="contained" color="secondary" className={classes.button}>
+                                                <Button variant="contained" 
+                                                        color="secondary" 
+                                                        className={classes.button}
+                                                        onClick={this._handleBuyAsset}>
                                                     Tramite de traspaso</Button>
                                             </Grid>
                                         </Grid>
@@ -369,7 +387,23 @@ class Home extends Component{
                         </Grid>
                     </DialogContent>
                     </Dialog>
-
+              
+              {/* Dialog for return message*/}
+              <Dialog open={this.state.showAlertMsg}
+		              onClose={this._handleClose}
+		              aria-labelledby="alert-dialog-title"
+		              aria-describedby="alert-dialog-description">
+	          <DialogTitle id="alert-dialog-title">{this.state.alertMsg}</DialogTitle>
+	          <DialogContent>
+	            <DialogContentText id="alert-dialog-description">
+	              <strong>Hash de la transacción:</strong>
+	              <p style={{ overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }}>{this.state.transactionHash}</p>
+	            </DialogContentText>
+	          </DialogContent>
+	          <DialogActions>
+	            <Button onClick={this._handleClose} color="primary" autoFocus>OK</Button>
+	          </DialogActions>
+	        </Dialog>
             </div>
         );
     }
