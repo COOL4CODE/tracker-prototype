@@ -1,0 +1,21 @@
+#header-title {
+    color: white;
+    font-size: 2rem;
+    display: table-cell;
+    vertical-align: middle;
+    height: 170px;
+    width: 400px;
+    padding-left: 22px;
+    padding-top: 40px;
+}
+
+#header-color {
+    color: white;
+    font-size: 2rem;
+    display: table-cell;
+    vertical-align: middle;
+    height: 80%;
+    width: 27%;
+    padding-left: 13px;
+    padding-top: 20px;
+}
