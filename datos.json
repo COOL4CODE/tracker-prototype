@@ -1,7 +1,76 @@
 {
-"placa":"CVQ182",
-"marca":"CHEVROLET",
-"linea":"OPTRA",
-"modelo":"2008",
-"imagen":"https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Chevy_Optra_DSC_0475.JPG/1200px-Chevy_Optra_DSC_0475.JPG"
+    "placa":"CVQ182",
+    "marca":"CHEVROLET",
+    "linea":"OPTRA LTE",
+    "modelo":"2008",
+    "engineSerial": "1GHBH41JXMN109186",
+    "colors": "Rojo, Negro",
+    "createdAt": "2008-04-23 23:01:00",
+    "updatedAt": "2008-04-23 23:01:00",
+    "city": "Bogotá D.C",
+    "state": "Bogotá D.C",
+    "country": "Colombia",
+    "imagen":"https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Chevy_Optra_DSC_0475.JPG/1200px-Chevy_Optra_DSC_0475.JPG",
+    "tickets": [
+        {
+            "policeAgentName": "Carlos Alberto Gonzalez Riveros",
+            "createdAt": "2009-04-23 23:01:00",
+            "updatedAt": "2009-04-23 23:01:00",
+            "ticketPlaceAddr": "Calle 172 # 40-35 Tv. 9f",
+            "ticketPlaceCity": "Bogotá D.C",
+            "ticketPlaceState": "Bogotá D.C",
+            "ticketDescription": "Levantamiento de infracción de transito por parquear en lugar prohibido y en contravía",
+            "status": [
+                {
+                    "statusName": "Pagado",
+                    "paymentEntity": "Bancolombia - PSE",
+                    "createdAt": "20010-10-12 23:01:00",
+                    "updatedAt": "20010-10-12 23:01:00",
+                    "paymentAmmount": "",
+                    "paid": "450000",
+                    "personnelResponsible": "Laura Moreno"
+                },
+                { "statusName": "Abierto",
+                    "paymentEntity": "",
+                    "createdAt": "20010-09-12 23:01:00",
+                    "updatedAt": "20010-09-12 23:01:00",
+                    "paymentAmmount": "450000",
+                    "paid": "",
+                    "personnelResponsible": "Carla Rengifo"
+                }
+            ]  
+        }
+    ],
+    "request":[
+        {
+            "requestName": "Cambio de color vehículo",
+            "createdAt": "20011-03-08 23:01:00",
+            "updatedAt": "20011-03-08 23:01:00",
+            "state": "Completado",
+            "personnelResponsible": "Andres Gutierrez"
+        }
+    ],
+    "log":[
+        {
+            "statusName": "Pagado",
+            "paymentEntity": "Bancolombia - PSE",
+            "createdAt": "20010-10-12 23:01:00",
+            "updatedAt": "20010-10-12 23:01:00",
+            "personnelResponsible": "Laura Moreno"
+        },
+        { "statusName": "Abierto",
+            "paymentEntity": "",
+            "createdAt": "20010-09-12 23:01:00",
+            "updatedAt": "20010-09-12 23:01:00",
+            "personnelResponsible": "Carla Rengifo"
+        },
+        {
+            "requestName": "Cambio de color vehículo",
+            "createdAt": "20011-03-08 23:01:00",
+            "updatedAt": "20011-03-08 23:01:00",
+            "state": "Completado",
+            "personnelResponsible": "Andres Gutierrez"
+        }
+
+    ]
 }
