@@ -7,5 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "COOL4CODE",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "nem-sdk": "^1.6.7"
+  }
 }
