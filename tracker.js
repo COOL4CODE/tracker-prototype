@@ -32,49 +32,79 @@ app.get("/assets", (req, res) => {
 
 })
 
-app.post("/assets-transfer", (req, res) => {
+app.post("/assets-transfer", (req, response) => {
+  var hashMessage = req.body.hash;
+
   // Create an NIS endpoint object
   var endpoint = nem.model.objects.create("endpoint")(nem.model.nodes.defaultTestnet, nem.model.nodes.defaultPort);
-  console.log('Create an NIS endpoint object', endpoint);
+  // console.log('Create an NIS endpoint object', endpoint);
 
   // Create a common object holding key 
   var common = nem.model.objects.create("common")("", "e82f40d22f81b8e6db10f2635b2bb4931c72eee4c68a762c043b6375768f20dc");
-  console.log('Create a common object holding key ', common);
+  // console.log('Create a common object holding key ', common);
 
   // Create variable to store our mosaic definitions, needed to calculate fees properly (already contains xem definition)
   var mosaicDefinitionMetaDataPair = nem.model.objects.get("mosaicDefinitionMetaDataPair");
-  console.log('Create variable to store our mosaic definitions, needed to calculate fees properly (already contains xem definition)', mosaicDefinitionMetaDataPair);
+  // console.log('Create variable to store our mosaic definitions, needed to calculate fees properly (already contains xem definition)', mosaicDefinitionMetaDataPair);
 
   // Create an un-prepared mosaic transfer transaction object (use same object as transfer tansaction)
-  var transferTransaction = nem.model.objects.create("transferTransaction")("TBCI2A67UQZAKCR6NS4JWAEICEIGEIM72G3MVW5S", 1, req.body.hash);
-  console.log('Create an un-prepared mosaic transfer transaction object (use same object as transfer tansaction)', transferTransaction);
-
-
-  /**
-   * ATTACHING XEM MOSAIC
-   *
-   * No need to get mosaic definition because it is already known in the mosaicdefinitionMetaDatapair
-   */
+  var transferTransaction = nem.model.objects.create("transferTransaction")("TBCI2A67UQZAKCR6NS4JWAEICEIGEIM72G3MVW5S", 1, hashMessage);
+  // console.log('Create an un-prepared mosaic transfer transaction object (use same object as transfer tansaction)', transferTransaction);
 
   // Create a mosaic attachment object
-  var mosaicAttachment = nem.model.objects.create("mosaicAttachment")("nem", "xem", 1);
-  console.log('Create a mosaic attachment object', mosaicAttachment);
+  var mosaicAttachment = nem.model.objects.create("mosaicAttachment")("cool4code-test", "asset", 1);
+  // console.log('Create a /mosaic attachment object', mosaicAttachment);
 
   // Push attachment into transaction mosaics
   transferTransaction.mosaics.push(mosaicAttachment);
-  console.log('Push attachment into transaction mosaics', mosaicAttachment);
+  // console.log('Push attachment into transaction mosaics', mosaicAttachment);
 
-  // Prepare the transfer transaction object
-  var transactionEntity = nem.model.transactions.prepare("mosaicTransferTransaction")(common, transferTransaction, mosaicDefinitionMetaDataPair, nem.model.network.data.testnet.id);
-  console.log('Prepare the transfer transaction object', transactionEntity);
+  // Need mosaic definition of nw.fiat:eur to calculate adequate fees, so we get it from network.
+  // Otherwise you can simply take the mosaic definition from api manually (http://bob.nem.ninja/docs/#retrieving-mosaic-definitions) 
+  // and put it into mosaicDefinitionMetaDataPair model (objects.js) next to nem:xem (be careful to respect object structure)
+  nem.com.requests.namespace.mosaicDefinitions(endpoint, mosaicAttachment.mosaicId.namespaceId).then(function(res) {
+    // Look for the mosaic definition(s) we want in the request response (Could use ["eur", "usd"] to return eur and usd mosaicDefinitionMetaDataPairs)
+    var neededDefinition = nem.utils.helpers.searchMosaicDefinitionArray(res.data, ["asset"]);
+    
+    // Get full name of mosaic to use as object key
+    var fullMosaicName  = nem.utils.format.mosaicIdToName(mosaicAttachment.mosaicId);
 
-  // Serialize transfer transaction and announce
-  console.log('Prepare the transfer transaction object');  
-  nem.model.transactions.send(common, transactionEntity, endpoint).then((rdata) => {
-    res.send({ msg: 'Transacción enviada.', data: rdata });
+    // Check if the mosaic was found
+    if (undefined === neededDefinition[fullMosaicName]) {
+      console.error("Mosaic not found !");
+      throw new Error();
+    }
+
+    // Set eur mosaic definition into mosaicDefinitionMetaDataPair
+    mosaicDefinitionMetaDataPair[fullMosaicName] = {};
+    mosaicDefinitionMetaDataPair[fullMosaicName].mosaicDefinition = neededDefinition[fullMosaicName];
+    // console.log('Set eur mosaic definition into mosaicDefinitionMetaDataPair', neededDefinition[fullMosaicName]x);
+    
+    // ★Get current supply with nem:xem
+    nem.com.requests.mosaic.supply(endpoint, nem.utils.format.mosaicIdToName(mosaicAttachment.mosaicId)).then(function(res) {
+      mosaicDefinitionMetaDataPair[nem.utils.format.mosaicIdToName(mosaicAttachment.mosaicId)].supply = res.supply;
+      
+      // ★Get current supply with eur:usd
+      nem.com.requests.mosaic.supply(endpoint, fullMosaicName).then(function(res) {
+        mosaicDefinitionMetaDataPair[fullMosaicName].supply = res.supply;
+      
+        // Prepare the transfer transaction object
+        var transactionEntity = nem.model.transactions.prepare("mosaicTransferTransaction")(common, transferTransaction, mosaicDefinitionMetaDataPair, nem.model.network.data.testnet.id);
+
+        // Serialize transfer transaction and announce
+        nem.model.transactions.send(common, transactionEntity, endpoint).then((rdata) => {
+          response.send({ msg: 'Transacción enviada.', data: rdata });
+        }).catch(err => {
+          response.send({ msg: 'Error en la transacción.', err: err });
+        });
+
+      }, function(err) { console.error(err); }); 
+    }, function(err) { console.error(err); });   
+    
+
   }).catch(err => {
-    res.send({ msg: 'Error en la transacción.', err: err });
-  });   
+    response.send({ msg: 'Error en la transacción.', err: err });
+  });     
 })
 
 
