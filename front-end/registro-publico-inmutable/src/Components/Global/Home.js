@@ -82,7 +82,9 @@ class Home extends Component{
             console.log("Full object:");
             console.log(res.data);
             var main = res.data;
-            var tickets = main.tikets;
+            var tickets = main.tickets;
+            var logs = main.log;
+            var request = main.request;
 
             this.setState({
                 hash: main.hash,
@@ -97,12 +99,15 @@ class Home extends Component{
                 state: main.state,
                 country: main.country,
                 image: main.imagen,
-                tickets: [],
-                logs: [],
-                request: []
+                tickets: tickets,
+                logs: logs,
+                request: request
 
             }, () => {
                 console.log(this.state.hash);
+                console.log(this.state.tickets);
+                console.log(this.state.logs);
+                console.log(this.state.request);
             })
 
             
@@ -124,8 +129,6 @@ class Home extends Component{
         }
     }
 
-    
-    
     render(){
 
         const { classes } = this.props;
@@ -177,6 +180,7 @@ class Home extends Component{
                                     </Card>
                                 </Grid>
                                 <Grid item xs={6}>
+
                                     <Card className={classes.cardOnDialog} >
                                         <CardMedia
                                             className={classes.media}
@@ -203,9 +207,9 @@ class Home extends Component{
                                             <Button size="small" color="primary">
                                                 Necesitas ayuda?
                                             </Button>
-                                        </CardActions>
-                                        
+                                        </CardActions>  
                                     </Card>
+
                                 </Grid>
                             </Grid>
                             <Grid container item xs={12} spacing={16}>
@@ -317,6 +321,52 @@ class Home extends Component{
                                 onClick={this.handleClickSearch}>
                             Buscar
                         </Button>
+
+                        <Grid item xs={12}>
+                            <Paper className={classes.paper} style={{ marginTop: '25px' }}>
+                            
+
+                            <Grid container spacing={8}>
+                                <Grid container item xs={12} spacing={8}>
+                                    <Grid item xs={12}>
+                                        <Grid container wrap="nowrap" spacing={16}>
+                                        
+                                        <Grid container item xs zeroMinWidth>
+                                            <Grid item xs={12} style={{ marginTop: '20px', textAlign: 'left' }}>
+                                               <Chip label={this.state.hash} className={classes.chip} />
+                                            </Grid>
+                                            <Grid item xs={12} style={{ marginTop: '20px', textAlign: 'left' }}>
+                                                Placa: {this.state.placa}
+                                            </Grid>
+                                            <Grid item xs={12} style={{ marginTop: '20px', textAlign: 'left' }}>
+                                                Marca: {this.state.marca}
+                                            </Grid>
+                                            <Grid item xs={12} style={{ marginTop: '20px', textAlign: 'left' }}>
+                                                Modelo: {this.state.modelo}
+                                            </Grid>
+                                            <Grid item xs={12} style={{ marginTop: '20px', textAlign: 'left' }}>
+                                                Serial del motor: {this.state.serial}
+                                            </Grid>
+                                            <Grid item xs={12} style={{ marginTop: '20px', textAlign: 'left' }}>
+                                                Colores: {this.state.colors}
+                                            </Grid>
+                                            <Grid item xs={12} style={{ marginTop: '20px', textAlign: 'left' }}>
+                                                Dirección radicación: {this.state.city}, {this.state.state}, {this.state.country}
+                                            </Grid>
+                                           
+                                            <Grid item xs={12} className="custom-text-parent-info" style={{ marginTop: '10px', textAlign: 'left' }}>
+                                                <Button variant="contained" color="secondary" className={classes.button}>
+                                                    Tramite de traspaso</Button>
+                                            </Grid>
+                                        </Grid>
+                                        </Grid>
+                                    </Grid>  
+                                
+                                </Grid>
+                            </Grid>
+
+                            </Paper>
+                        </Grid>
                     </DialogContent>
                     </Dialog>
 
