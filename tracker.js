@@ -3,8 +3,8 @@
 const express = require('express');
 const app     = express();
 const morgan  = require('morgan');
-const mysql   = require('mysql');
 var cors      = require('cors');
+var fs = require('fs');
 
 // Prevent Cors-domain errors and allow it
 app.use(cors());
@@ -13,9 +13,16 @@ app.use(cors());
 app.use(morgan('combined'))
 
 app.get( "/", (req, res) => {
-    console.log(LOG_TAG + "Responding to root route");
-    res.send("¡Welcome! Hello from RCIS :)");
 
+    fs.readFile("./datos.json", function (err,data)
+    {
+        if(err){console.log(err);
+        }else{
+              console.log('Datos');
+              res.end(data);
+        }
+    }
+    );
 })
 
 app.get("/asset/:id", (req, res) => {
